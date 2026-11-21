@@ -61,4 +61,22 @@ for l in f: print(l)
 ```
 <img width="1205" height="592" alt="image" src="https://github.com/user-attachments/assets/bb03d838-b8c3-4323-83d3-2e4192ab5ec5" />
 
+## ATP代码实验
+F12和右键都被禁用，但是可以通过浏览器菜单打开开发者工具，然后禁用JS即可复制粘贴
 
+## 奶娃的博客
+需要把每个碎片集齐，得到：H4sIAAAAAAAA/wTAwQ2AMAgF0JXaADM4xo9BbQ+UA0GrMe7uK/eyjv11rpNhfLYu0OBpAvYNWsxIU0AXxYMjuA3yBGsUEWQnVE8Kp/z+AAAA//+XJ0P/SwAAAA==  
+这一串是bas64+zip的压缩数据，写个脚本解码解压即可获得flag  
+```python
+import re, html, base64, gzip, urllib.request
+
+B = "http://8000-e17cb714-5905-46c3-ba36-b268ba5f06b7.challenge.ctfplus.cn"
+s = "".join(
+    html.unescape(re.findall(r'class="flag-fragment"[^>]*>(.*?)</span>',
+        urllib.request.urlopen(f"{B}/page?id={i}").read().decode("utf-8", "ignore"))[0])
+    for i in range(1, 125)
+)
+print(gzip.decompress(base64.b64decode(s)).decode())
+```
+
+## pollute the key
